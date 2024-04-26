@@ -21,7 +21,7 @@ let jira, domain, username, password, versionName, versionDescription, versionAr
             password: password,
         });
         //core.setFailed(`version is not correct: [${version}] must be "1.0.0"/"v1.0.0"/"test 1.0.0" pattern`);
-        createAndSetVersion(issueKeys, versionName, versionDescription, versionArchived, versionReleased)
+        await createAndSetVersion(issueKeys, versionName, versionDescription, versionArchived, versionReleased)
 
         // core.setOutput("new-version", nextVersion);
     } catch (error) {
@@ -50,10 +50,12 @@ async function createAndSetVersion(issueKeys, versionName, versionDescription, v
     }
     // publish version (passing it as argument while creating version doesn't work
     if (versionReleased) {
+        const date = new Date().toISOString().substring(0,10);
         await jira.updateVersion({
             id: versionId,
             released: true,
-            projectId: projectId
+            projectId: projectId,
+            releaseDate: date
         });
     }
 }
